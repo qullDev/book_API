@@ -82,7 +82,7 @@ func (h *BookHandler) Create(c *gin.Context) {
 	}
 
 	if err := h.db.Create(&item).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "gagal menambahkan buku"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "gagal menambahkan buku", "error": err})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"data": item})
