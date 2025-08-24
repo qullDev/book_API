@@ -45,7 +45,7 @@ func Load() (*Config, error) {
 		DBHost:          getenv("DB_HOST", "localhost"),
 		DBPort:          getenv("DB_PORT", "5432"),
 		DBUser:          getenv("DB_USER", "postgres"),
-		DBPassword:      getenv("DB_PASSWORD", "postgres"),
+		DBPassword:      getenv("DB_PASSWORD", "12345"),
 		DBName:          getenv("DB_NAME", "books_db"),
 		DBSSLMode:       getenv("DB_SSLMODE", "disable"),
 		RedisAddr:       getenv("REDIS_ADDR", "localhost:6379"),
