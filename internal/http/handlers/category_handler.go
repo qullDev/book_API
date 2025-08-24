@@ -35,6 +35,14 @@ type updateCategoryReq struct {
 	Name string `json:"name" binding:"required,min=1,max=100"`
 }
 
+// @Summary List all categories
+// @Description Get list of all categories
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string][]category.Category
+// @Router /api/categories [get]
 func (h *CategoryHandler) List(c *gin.Context) {
 	var items []category.Category
 	if err := h.db.Order("name asc").Find(&items).Error; err != nil {

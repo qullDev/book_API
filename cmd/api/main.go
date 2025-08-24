@@ -26,8 +26,14 @@ import (
 // @in header
 // @name Authorization
 // @schemes http https
-// @produce json
-// @consumes json
+// @produce application/json
+// @consumes application/json
+// @tag.name auth
+// @tag.description Authentication operations
+// @tag.name books
+// @tag.description Book operations
+// @tag.name categories
+// @tag.description Category operations
 func main() {
 	// Load config
 	cfg, err := config.Load()

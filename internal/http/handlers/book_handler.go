@@ -50,6 +50,14 @@ type updateBookReq struct {
 	TotalPage   *int       `json:"total_page"`
 }
 
+// @Summary List all books
+// @Description Get list of all books
+// @Tags books
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string][]book.Book
+// @Router /api/books [get]
 func (h *BookHandler) List(c *gin.Context) {
 	var items []book.Book
 	if err := h.db.Order("title asc").Find(&items).Error; err != nil {
@@ -59,6 +67,16 @@ func (h *BookHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": items})
 }
 
+// @Summary Create new book
+// @Description Create a new book
+// @Tags books
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param book body createBookReq true "Book data"
+// @Success 201 {object} map[string]book.Book
+// @Failure 400 {object} gin.H
+// @Router /api/books [post]
 func (h *BookHandler) Create(c *gin.Context) {
 	var req createBookReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -88,6 +106,17 @@ func (h *BookHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"data": item})
 }
 
+// @Summary Get book detail
+// @Description Get detail of a book
+// @Tags books
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Book ID"
+// @Success 200 {object} map[string]book.Book
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Router /api/books/{id} [get]
 func (h *BookHandler) Detail(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -107,6 +136,18 @@ func (h *BookHandler) Detail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": item})
 }
 
+// @Summary Update book
+// @Description Update an existing book
+// @Tags books
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Book ID"
+// @Param book body updateBookReq true "Updated book data"
+// @Success 200 {object} map[string]book.Book
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Router /api/books/{id} [put]
 func (h *BookHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -169,6 +210,17 @@ func (h *BookHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": existing})
 }
 
+// @Summary Delete book
+// @Description Delete a book
+// @Tags books
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Book ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Router /api/books/{id} [delete]
 func (h *BookHandler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)

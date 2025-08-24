@@ -1,11 +1,402 @@
 basePath: /
+definitions:
+  gin.H:
+    additionalProperties: {}
+    type: object
+  github_com_qullDev_book_API_internal_domain_book.Book:
+    properties:
+      category:
+        $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_category.Category'
+      category_id:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      modified_at:
+        type: string
+      modified_by:
+        type: string
+      price:
+        type: number
+      release_year:
+        type: integer
+      thickness:
+        type: string
+      title:
+        type: string
+      total_page:
+        type: integer
+    type: object
+  github_com_qullDev_book_API_internal_domain_category.Category:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: string
+      modified_at:
+        type: string
+      modified_by:
+        type: string
+      name:
+        type: string
+    type: object
+  internal_http_handlers.createBookReq:
+    properties:
+      category_id:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      price:
+        type: number
+      release_year:
+        type: integer
+      title:
+        maxLength: 200
+        type: string
+      total_page:
+        type: integer
+    required:
+    - category_id
+    - price
+    - release_year
+    - title
+    - total_page
+    type: object
+  internal_http_handlers.loginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  internal_http_handlers.logoutReq:
+    properties:
+      refresh_token:
+        description: 'optional: jika kosong, revoke semua RT user'
+        type: string
+    type: object
+  internal_http_handlers.refreshReq:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  internal_http_handlers.tokenPairResp:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
+  internal_http_handlers.updateBookReq:
+    properties:
+      category_id:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      price:
+        type: number
+      release_year:
+        type: integer
+      title:
+        maxLength: 200
+        type: string
+      total_page:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
   description: RESTful service for managing books and categories with JWT authentication
   title: Book API
   version: "1.0"
-paths: {}
+paths:
+  /api/books:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_book.Book'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List all books
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: Create a new book
+      parameters:
+      - description: Book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http_handlers.createBookReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_book.Book'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Create new book
+      tags:
+      - books
+  /api/books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Delete book
+      tags:
+      - books
+    get:
+      consumes:
+      - application/json
+      description: Get detail of a book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_book.Book'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get book detail
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      description: Update an existing book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http_handlers.updateBookReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_book.Book'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Update book
+      tags:
+      - books
+  /api/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/github_com_qullDev_book_API_internal_domain_category.Category'
+              type: array
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List all categories
+      tags:
+      - categories
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with username and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http_handlers.loginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_http_handlers.tokenPairResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Login user
+      tags:
+      - auth
+  /api/users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout and invalidate tokens
+      parameters:
+      - description: Refresh token to revoke (optional)
+        in: body
+        name: logoutRequest
+        schema:
+          $ref: '#/definitions/internal_http_handlers.logoutReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Logout user
+      tags:
+      - auth
+  /api/users/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Get new access token using refresh token
+      parameters:
+      - description: Refresh token
+        in: body
+        name: refreshRequest
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http_handlers.refreshReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_http_handlers.tokenPairResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Refresh token
+      tags:
+      - auth
 securityDefinitions:
   BearerAuth:
     in: header

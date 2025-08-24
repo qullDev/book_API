@@ -17,7 +17,7 @@ func New(db *gorm.DB, cfg *config.Config, ts *appauth.TokenStore) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 
-	// Swagger route
+	// Swagger route - pastikan ini ada di atas route lainnya
 	r.GET("/api/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// endpoint health check
