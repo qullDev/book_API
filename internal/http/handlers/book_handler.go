@@ -73,9 +73,9 @@ func (h *BookHandler) List(c *gin.Context) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param book body createBookReq true "Book data"
-// @Success 201 {object} map[string]book.Book
-// @Failure 400 {object} gin.H
+// @Param book body createBookReq true "Book data" example({"title":"The Go Programming Language","category_id":"550e8400-e29b-41d4-a716-446655440000","description":"Comprehensive guide to Go","image_url":"https://example.com/book.jpg","release_year":2020,"price":59.99,"total_page":150})
+// @Success 201 {object} map[string]book.Book "example={'data':{'id':'550e8400-e29b-41d4-a716-446655440000','title':'The Go Programming Language','category_id':'550e8400-e29b-41d4-a716-446655440000','description':'Comprehensive guide to Go','release_year':2020,'price':59.99,'total_page':150,'thickness':'tebal'}}"
+// @Failure 400 {object} gin.H "example={'message':'payload tidak valid'}"
 // @Router /api/books [post]
 func (h *BookHandler) Create(c *gin.Context) {
 	var req createBookReq
@@ -142,11 +142,10 @@ func (h *BookHandler) Detail(c *gin.Context) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param id path string true "Book ID"
-// @Param book body updateBookReq true "Updated book data"
+// @Param id path string true "Book ID" example(550e8400-e29b-41d4-a716-446655440000)
+// @Param book body updateBookReq true "Updated book data" example({"title":"Updated Title","price":49.99})
 // @Success 200 {object} map[string]book.Book
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
+// @Failure 400,404 {object} gin.H "example={'message':'buku tidak ditemukan'}"
 // @Router /api/books/{id} [put]
 func (h *BookHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
@@ -239,3 +238,4 @@ func (h *BookHandler) Delete(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "buku berhasil dihapus"})
 }
+

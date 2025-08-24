@@ -78,7 +78,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "example={'data':{'id':'550e8400-e29b-41d4-a716-446655440000','title':'The Go Programming Language','category_id':'550e8400-e29b-41d4-a716-446655440000','description':'Comprehensive guide to Go','release_year':2020,'price':59.99,'total_page':150,'thickness':'tebal'}}",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -87,7 +87,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "example={'message':'payload tidak valid'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -166,6 +166,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "550e8400-e29b-41d4-a716-446655440000",
                         "description": "Book ID",
                         "name": "id",
                         "in": "path",
@@ -192,13 +193,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "example={'message':'buku tidak ditemukan'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "example={'message':'buku tidak ditemukan'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -316,7 +317,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "example={'data':{'id':'550e8400-e29b-41d4-a716-446655440000','name':'Fiction','created_at':'2024-01-20T10:00:00Z'}}",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -325,7 +326,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "example={'message':'payload tidak valid'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -570,19 +571,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "example={'access_token':'eyJhbG...','refresh_token':'eyJhbG...','token_type':'Bearer','expires_in':900,'refresh_expires_in':604800,'user_id':'550e8400-e29b-41d4-a716-446655440000','username':'admin'}",
                         "schema": {
                             "$ref": "#/definitions/internal_http_handlers.tokenPairResp"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "example={'message':'username atau password salah'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "example={'message':'username atau password salah'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -620,13 +621,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "example={'message':'logout berhasil'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "example={'message':'unauthorized'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -666,13 +667,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "example={'message':'refresh token tidak valid'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "example={'message':'refresh token tidak valid'}",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }

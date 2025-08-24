@@ -72,7 +72,7 @@ book_API/
    go run cmd/api/main.go
    ```
 
-## API Documentation 
+## API Documentation (still in development stage)
 
 The API documentation is available through Swagger UI at `/api/docs/index.html`. This provides an interactive interface to:
 

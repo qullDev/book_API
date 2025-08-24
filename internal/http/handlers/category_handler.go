@@ -58,9 +58,9 @@ func (h *CategoryHandler) List(c *gin.Context) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param category body createCategoryReq true "Category data"
-// @Success 201 {object} map[string]category.Category
-// @Failure 400 {object} gin.H
+// @Param category body createCategoryReq true "Category data" example({"name": "Fiction"})
+// @Success 201 {object} map[string]category.Category "example={'data':{'id':'550e8400-e29b-41d4-a716-446655440000','name':'Fiction','created_at':'2024-01-20T10:00:00Z'}}"
+// @Failure 400 {object} gin.H "example={'message':'payload tidak valid'}"
 // @Router /api/categories [post]
 func (h *CategoryHandler) Create(c *gin.Context) {
 	var req createCategoryReq

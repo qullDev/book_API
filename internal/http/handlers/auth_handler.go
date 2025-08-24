@@ -46,10 +46,9 @@ type tokenPairResp struct {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param loginRequest body loginReq true "Login credentials"
-// @Success 200 {object} tokenPairResp
-// @Failure 400 {object} gin.H
-// @Failure 401 {object} gin.H
+// @Param loginRequest body loginReq true "Login credentials" example({"username": "admin", "password": "password123"})
+// @Success 200 {object} tokenPairResp "example={'access_token':'eyJhbG...','refresh_token':'eyJhbG...','token_type':'Bearer','expires_in':900,'refresh_expires_in':604800,'user_id':'550e8400-e29b-41d4-a716-446655440000','username':'admin'}"
+// @Failure 400,401 {object} gin.H "example={'message':'username atau password salah'}"
 // @Router /api/users/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req loginReq
@@ -110,9 +109,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param refreshRequest body refreshReq true "Refresh token"
+// @Param refreshRequest body refreshReq true "Refresh token" example({"refresh_token": "eyJhbG..."})
 // @Success 200 {object} tokenPairResp
-// @Failure 400,401 {object} gin.H
+// @Failure 400,401 {object} gin.H "example={'message':'refresh token tidak valid'}"
 // @Router /api/users/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	var req refreshReq
@@ -185,9 +184,9 @@ type logoutReq struct {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param logoutRequest body logoutReq false "Refresh token to revoke (optional)"
-// @Success 200 {object} gin.H
-// @Failure 401 {object} gin.H
+// @Param logoutRequest body logoutReq false "Refresh token to revoke (optional)" example({"refresh_token": "eyJhbG..."})
+// @Success 200 {object} gin.H "example={'message':'logout berhasil'}"
+// @Failure 401 {object} gin.H "example={'message':'unauthorized'}"
 // @Router /api/users/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	// userID dari middleware JWT
@@ -228,3 +227,4 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "logout berhasil"})
 }
+
