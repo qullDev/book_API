@@ -59,6 +59,7 @@ func main() {
 	r := router.New(dbConn, cfg, ts)
 	log.Println("Server is running on port:", cfg.AppPort)
 
+	// Update to use PORT env var from Railway
 	if err := r.Run(":" + cfg.AppPort); err != nil {
 		log.Fatal(err)
 	}

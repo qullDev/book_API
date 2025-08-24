@@ -28,6 +28,9 @@ type Config struct {
 func Load() (*Config, error) {
 	_ = godotenv.Load()
 
+	// Use PORT env var from Railway
+	port := getenv("PORT", "8080")
+
 	// default Redis DB jadi 1 (bukan 0)
 	redisDB, _ := strconv.Atoi(getenv("REDIS_DB", "1"))
 
@@ -40,21 +43,22 @@ func Load() (*Config, error) {
 		rt = 168 * time.Hour
 	}
 
+	// Update defaults for Railway
 	return &Config{
-		AppPort:         getenv("APP_PORT", "8080"),
+		AppPort:         port,
 		DBHost:          getenv("DB_HOST", "localhost"),
 		DBPort:          getenv("DB_PORT", "5432"),
 		DBUser:          getenv("DB_USER", "postgres"),
-		DBPassword:      getenv("DB_PASSWORD", "12345"),
-		DBName:          getenv("DB_NAME", "books_db"),
-		DBSSLMode:       getenv("DB_SSLMODE", "disable"),
+		DBPassword:      getenv("DB_PASSWORD", ""),
+		DBName:          getenv("DB_NAME", "railway"),
+		DBSSLMode:       getenv("DB_SSLMODE", "require"), // Change default to require
 		RedisAddr:       getenv("REDIS_ADDR", "localhost:6379"),
 		RedisPassword:   getenv("REDIS_PASSWORD", ""),
 		RedisDB:         redisDB,
-		JWTSecret:       getenv("JWT_SECRET", "devsecret"),
+		JWTSecret:       getenv("JWT_SECRET", "your-secret-key"),
 		AccessTokenTTL:  at,
 		RefreshTokenTTL: rt,
-		Env:             getenv("ENV", "dev"),
+		Env:             getenv("ENV", "production"), // Change default to production
 	}, nil
 }
 
