@@ -5,6 +5,9 @@ import (
 	"log"
 
 	"github.com/qullDev/book_API/internal/config"
+	"github.com/qullDev/book_API/internal/domain/book"
+	"github.com/qullDev/book_API/internal/domain/category"
+	"github.com/qullDev/book_API/internal/domain/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,6 +20,11 @@ func Connect(cfg *config.Config) (*gorm.DB, error) {
 	if err != nil {
 		log.Fatal("Error connecting to database:", err)
 		return nil, err
+	}
+
+	// Auto migrate schema
+	if err := db.AutoMigrate(&category.Category{}, &book.Book{}, &user.User{}); err != nil {
+		log.Println("AutoMigrate warning:", err)
 	}
 
 	return db, nil

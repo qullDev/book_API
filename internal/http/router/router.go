@@ -4,10 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/qullDev/book_API/internal/config"
+	"github.com/qullDev/book_API/internal/http/handlers"
+	"github.com/qullDev/book_API/internal/http/middleware"
+	appauth "github.com/qullDev/book_API/internal/pkg/auth"
+	"gorm.io/gorm"
 )
 
-func New() *gin.Engine {
-
+func New(db *gorm.DB, cfg *config.Config, ts *appauth.TokenStore) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 
@@ -17,6 +21,28 @@ func New() *gin.Engine {
 			"status": "ok",
 		})
 	})
+
+	// route publik: login & refresh
+	authHandler := handlers.NewAuthHandler(db, ts, cfg)
+	r.POST("/api/users/login", authHandler.Login)
+	r.POST("/api/users/refresh", authHandler.Refresh)
+
+	// protected dengan JWT
+	jwtMW := middleware.NewJWTAuth(cfg)
+	api := r.Group("/api", jwtMW)
+
+	// logout (harus bawa AT valid), RT opsional
+	api.POST("/users/logout", authHandler.Logout)
+
+	// kategori
+	catHandler := handlers.NewCategoryHandler(db)
+	catGroup := api.Group("/categories")
+	catHandler.Register(catGroup)
+
+	// buku
+	bookHandler := handlers.NewBookHandler(db)
+	bookGroup := api.Group("/books")
+	bookHandler.Register(bookGroup)
 
 	return r
 }
