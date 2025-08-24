@@ -8,12 +8,17 @@ import (
 	"github.com/qullDev/book_API/internal/http/handlers"
 	"github.com/qullDev/book_API/internal/http/middleware"
 	appauth "github.com/qullDev/book_API/internal/pkg/auth"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
 func New(db *gorm.DB, cfg *config.Config, ts *appauth.TokenStore) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
+
+	// Swagger route
+	r.GET("/api/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// endpoint health check
 	r.GET("/health", func(c *gin.Context) {

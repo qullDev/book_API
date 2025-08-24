@@ -1,0 +1,401 @@
+openapi: 3.0.0
+info:
+  title: Book API
+  description: RESTful service for managing books and categories with JWT authentication
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://your-production-url
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        refresh_expires_in:
+          type: integer
+        user_id:
+          type: string
+        username:
+          type: string
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        category_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        image_url:
+          type: string
+        release_year:
+          type: integer
+          minimum: 1980
+          maximum: 2024
+        price:
+          type: number
+          format: float
+        total_page:
+          type: integer
+        thickness:
+          type: string
+          enum: [tipis, tebal]
+        created_at:
+          type: string
+          format: date-time
+        modified_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+
+paths:
+  /api/users/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/users/refresh:
+    post:
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+
+  /api/users/logout:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Logout user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: Logout successful
+
+  /api/categories:
+    get:
+      security:
+        - BearerAuth: []
+      summary: List all categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+
+    post:
+      security:
+        - BearerAuth: []
+      summary: Create new category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+      responses:
+        "201":
+          description: Category created successfully
+
+  /api/categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get category details
+      responses:
+        "200":
+          description: Category details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+    put:
+      security:
+        - BearerAuth: []
+      summary: Update category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+      responses:
+        "200":
+          description: Category updated successfully
+
+    delete:
+      security:
+        - BearerAuth: []
+      summary: Delete category
+      responses:
+        "200":
+          description: Category deleted successfully
+
+  /api/categories/{id}/books:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security:
+        - BearerAuth: []
+      summary: List books in category
+      responses:
+        "200":
+          description: List of books in category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+
+  /api/books:
+    get:
+      security:
+        - BearerAuth: []
+      summary: List all books
+      responses:
+        "200":
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+
+    post:
+      security:
+        - BearerAuth: []
+      summary: Create new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - category_id
+                - release_year
+                - price
+                - total_page
+              properties:
+                title:
+                  type: string
+                  maxLength: 200
+                category_id:
+                  type: string
+                  format: uuid
+                description:
+                  type: string
+                image_url:
+                  type: string
+                release_year:
+                  type: integer
+                  minimum: 1980
+                  maximum: 2024
+                price:
+                  type: number
+                  format: float
+                total_page:
+                  type: integer
+      responses:
+        "201":
+          description: Book created successfully
+
+  /api/books/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get book details
+      responses:
+        "200":
+          description: Book details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+
+    put:
+      security:
+        - BearerAuth: []
+      summary: Update book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  maxLength: 200
+                category_id:
+                  type: string
+                  format: uuid
+                description:
+                  type: string
+                image_url:
+                  type: string
+                release_year:
+                  type: integer
+                  minimum: 1980
+                  maximum: 2024
+                price:
+                  type: number
+                  format: float
+                total_page:
+                  type: integer
+      responses:
+        "200":
+          description: Book updated successfully
+
+    delete:
+      security:
+        - BearerAuth: []
+      summary: Delete book
+      responses:
+        "200":
+          description: Book deleted successfully

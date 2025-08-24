@@ -13,8 +13,18 @@ import (
 	"github.com/qullDev/book_API/internal/http/router"
 	appauth "github.com/qullDev/book_API/internal/pkg/auth"
 	"golang.org/x/crypto/bcrypt"
+
+	_ "github.com/qullDev/book_API/docs" // swagger docs
 )
 
+// @title Book API
+// @version 1.0
+// @description RESTful service for managing books and categories with JWT authentication
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	// Load config
 	cfg, err := config.Load()
