@@ -52,6 +52,16 @@ func (h *CategoryHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": items})
 }
 
+// @Summary Create category
+// @Description Create a new category
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param category body createCategoryReq true "Category data"
+// @Success 201 {object} map[string]category.Category
+// @Failure 400 {object} gin.H
+// @Router /api/categories [post]
 func (h *CategoryHandler) Create(c *gin.Context) {
 	var req createCategoryReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -66,6 +76,16 @@ func (h *CategoryHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"data": item})
 }
 
+// @Summary Get category detail
+// @Description Get detail of a category
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID" format(uuid)
+// @Success 200 {object} map[string]category.Category
+// @Failure 400,404 {object} gin.H
+// @Router /api/categories/{id} [get]
 func (h *CategoryHandler) Detail(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -85,6 +105,17 @@ func (h *CategoryHandler) Detail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": item})
 }
 
+// @Summary Update category
+// @Description Update an existing category
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID" format(uuid)
+// @Param category body updateCategoryReq true "Updated category data"
+// @Success 200 {object} map[string]category.Category
+// @Failure 400,404 {object} gin.H
+// @Router /api/categories/{id} [put]
 func (h *CategoryHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -114,6 +145,16 @@ func (h *CategoryHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": item})
 }
 
+// @Summary Delete category
+// @Description Delete a category
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID" format(uuid)
+// @Success 200 {object} gin.H
+// @Failure 400,404 {object} gin.H
+// @Router /api/categories/{id} [delete]
 func (h *CategoryHandler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -133,6 +174,16 @@ func (h *CategoryHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "kategori berhasil dihapus"})
 }
 
+// @Summary List books in category
+// @Description Get list of books in a specific category
+// @Tags categories
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID" format(uuid)
+// @Success 200 {object} map[string][]book.Book
+// @Failure 400 {object} gin.H
+// @Router /api/categories/{id}/books [get]
 func (h *CategoryHandler) ListBooks(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
