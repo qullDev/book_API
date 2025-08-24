@@ -27,6 +27,10 @@ type loginReq struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type refreshReq struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 type tokenPairResp struct {
 	AccessToken      string `json:"access_token"`
 	RefreshToken     string `json:"refresh_token"`
@@ -37,6 +41,16 @@ type tokenPairResp struct {
 	Username         string `json:"username,omitempty"`
 }
 
+// @Summary Login user
+// @Description Login with username and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param loginRequest body loginReq true "Login credentials"
+// @Success 200 {object} tokenPairResp
+// @Failure 400 {object} gin.H
+// @Failure 401 {object} gin.H
+// @Router /api/users/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req loginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -91,10 +105,15 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	})
 }
 
-type refreshReq struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
-}
-
+// @Summary Refresh token
+// @Description Get new access token using refresh token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param refreshRequest body refreshReq true "Refresh token"
+// @Success 200 {object} tokenPairResp
+// @Failure 400,401 {object} gin.H
+// @Router /api/users/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	var req refreshReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -160,6 +179,16 @@ type logoutReq struct {
 	RefreshToken string `json:"refresh_token"` // optional: jika kosong, revoke semua RT user
 }
 
+// @Summary Logout user
+// @Description Logout and invalidate tokens
+// @Tags auth
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param logoutRequest body logoutReq false "Refresh token to revoke (optional)"
+// @Success 200 {object} gin.H
+// @Failure 401 {object} gin.H
+// @Router /api/users/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	// userID dari middleware JWT
 	userIDStr := c.GetString("userID")

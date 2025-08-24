@@ -25,6 +25,9 @@ import (
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
+// @schemes http https
+// @produce json
+// @consumes json
 func main() {
 	// Load config
 	cfg, err := config.Load()
