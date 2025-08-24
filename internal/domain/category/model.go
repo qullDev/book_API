@@ -8,12 +8,12 @@ import (
 )
 
 type Category struct {
-	ID         uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Name       string    `gorm:"uniqueIndex;size:100;not null"`
-	CreatedAt  time.Time
-	CreatedBy  uuid.UUID `gorm:"type:uuid"`
-	ModifiedAt time.Time
-	ModifiedBy uuid.UUID `gorm:"type:uuid"`
+	ID         uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	Name       string    `json:"name" gorm:"uniqueIndex;size:100;not null"`
+	CreatedAt  time.Time `json:"created_at"`
+	CreatedBy  uuid.UUID `json:"created_by" gorm:"type:uuid"`
+	ModifiedAt time.Time `json:"modified_at"`
+	ModifiedBy uuid.UUID `json:"modified_by" gorm:"type:uuid"`
 }
 
 func (c *Category) BeforeCreate(tx *gorm.DB) (err error) {
