@@ -72,6 +72,30 @@ book_API/
    go run cmd/api/main.go
    ```
 
+## API Documentation
+
+The API documentation is available through Swagger UI at `/api/docs/index.html`. This provides an interactive interface to:
+
+- Explore all available endpoints
+- View request/response schemas
+- Test API endpoints directly from the browser
+- Understand authentication requirements
+- View validation rules and constraints
+
+You can access the Swagger documentation at:
+
+```
+http://localhost:8080/api/docs/index.html
+```
+
+### Features
+
+- Interactive API testing
+- Request/response examples
+- Authentication documentation
+- Schema definitions for all models
+- Detailed parameter descriptions
+
 ## Authentication Flow
 
 ### 1. Login
