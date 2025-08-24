@@ -44,27 +44,30 @@ book_API/
 2. Copy `.env.example` to `.env` and configure:
 
    ```bash
-   APP_PORT=8080
+   PORT=8080
 
-   DB_HOST=localhost
-   DB_PORT=5432
+   # Railway PostgreSQL credentials
+   DB_HOST=your-railway-postgres-host.railway.app
+   DB_PORT=7777 # Railway PostgreSQL port
    DB_USER=postgres
-   DB_PASSWORD=your_password
-   DB_NAME=books_db
-   DB_SSLMODE=disable
+   DB_PASSWORD=your-railway-db-password
+   DB_NAME=railway
+   DB_SSLMODE=require # Change to require for Railway
 
-   REDIS_ADDR=localhost:6379
-   REDIS_PASSWORD=
-   REDIS_DB=1
+   # Railway Redis credentials
+   REDIS_ADDR=your-railway-redis-host.railway.app:6379
+   REDIS_PASSWORD=your-railway-redis-password
+   REDIS_DB=0
 
-   JWT_SECRET=your_secret_key
+   JWT_SECRET=your-secret-key
    ACCESS_TOKEN_TTL=15m
    REFRESH_TOKEN_TTL=168h
 
-   ENV=dev
+   ENV=production
    ```
 
-3. Run the application:
+3. For Railway deployment, set these environment variables in Railway dashboard
+4. Run the application:
    ```bash
    go run cmd/api/main.go
    ```
